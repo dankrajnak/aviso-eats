@@ -10,7 +10,8 @@
 		"build": "tsc",
 		"start": "yarn run build && dist/cli.js",
 		"pretest": "yarn run build",
-		"test": "xo && ava"
+		"test": "xo && ava",
+		"prepare": "husky install"
 	},
 	"files": [
 		"dist/cli.js"
@@ -24,10 +25,18 @@
 		"@ava/typescript": "^2.0.0",
 		"@sindresorhus/tsconfig": "^2.0.0",
 		"@types/react": "^17.0.26",
+		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-config-xo-react": "^0.25.0",
 		"eslint-plugin-react": "^7.26.1",
 		"eslint-plugin-react-hooks": "^4.2.0",
+		"husky": ">=6",
+		"lint-staged": ">=10",
+		"prettier": "^2.4.1",
 		"typescript": "^4.4.3"
+	},
+	"lint-staged": {
+		"*.js": "eslint --cache --fix",
+		"*.{js,css,md}": "prettier --write"
 	}
 }
