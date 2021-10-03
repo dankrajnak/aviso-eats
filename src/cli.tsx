@@ -1,28 +1,13 @@
-#!/usr/bin/env node
 import React from "react";
 import { render } from "ink";
-import meow from "meow";
+import { Command } from "commander";
 import App from "./ui";
 
-const cli = meow(
-  `
-	Usage
-	  $ aviso-eats
+const program = new Command();
 
-	Options
-		--name  Your name
+program.name("aviso-eats");
+program.description("Hi!");
 
-	Examples
-	  $ aviso-eats --name=Jane
-	  Hello, Jane
-`,
-  {
-    flags: {
-      name: {
-        type: "string",
-      },
-    },
-  }
-);
+program.parse(process.argv);
 
-render(<App name={cli.flags.name} />);
+render(<App />);

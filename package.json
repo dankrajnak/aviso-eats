@@ -7,8 +7,9 @@
 		"node": ">=10"
 	},
 	"scripts": {
-		"build": "tsc",
-		"start": "yarn run build && dist/cli.js",
+		"clean": "rimraf dist",
+		"build": "yarn clean && rollup -c rollup.config.ts",
+		"start": "yarn run build && node dist/bundle.js",
 		"pretest": "yarn run build",
 		"test": "xo && ava",
 		"prepare": "husky install"
@@ -17,12 +18,14 @@
 		"dist/cli.js"
 	],
 	"dependencies": {
+		"commander": "^8.2.0",
 		"ink": "^3.0.9",
-		"meow": "^9.0.0",
+		"ink-task-list": "^1.1.0",
 		"react": "^16.14.0"
 	},
 	"devDependencies": {
 		"@ava/typescript": "^2.0.0",
+		"@rollup/plugin-typescript": "^8.2.5",
 		"@sindresorhus/tsconfig": "^2.0.0",
 		"@types/react": "^17.0.26",
 		"@typescript-eslint/eslint-plugin": "^4.32.0",
@@ -34,6 +37,10 @@
 		"husky": ">=6",
 		"lint-staged": ">=10",
 		"prettier": "^2.4.1",
+		"rimraf": "^3.0.2",
+		"rollup": "^2.58.0",
+		"ts-loader": "^9.2.6",
+		"tslib": "^2.3.1",
 		"typescript": "^4.4.3"
 	},
 	"lint-staged": {
