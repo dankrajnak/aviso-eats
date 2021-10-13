@@ -8,6 +8,7 @@ import importedShuffle from "fast-shuffle";
 const shuffle: any = importedShuffle; // types are wrong.
 
 import { getStartOfDayEST } from "./helpers";
+import config from "./config";
 
 // All the types
 export type User = {
@@ -37,7 +38,9 @@ export type State = {
   votesForCurrentOption: Vote[];
   me: User | null;
   gracePeriodEnd: number | null;
+  wrongVersion: boolean;
   setUsername: (username: string) => void;
+  isDefault: boolean;
 };
 
 export type RestaurantWithStatus = {
@@ -52,18 +55,22 @@ const defaultState: State = {
   checkedInUsers: [],
   votesForCurrentOption: [],
   gracePeriodEnd: null,
+  wrongVersion: false,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setUsername: () => {},
+  isDefault: true,
 };
 
 // Three minutes
-const gracePeriod = 1000 * 60 * 3;
+const gracePeriod = 1000 * 60;
 
 export const StateContext = React.createContext<State>(defaultState);
 
 export const StateProvider: FC = ({ children }) => {
   const [firebaseState, setFirebaseState] =
     React.useState<FirebaseState | null>(null);
+
+  const [counter, setCounter] = React.useState(1);
 
   const [username, setUsername] = React.useState<string | null>(null);
 
@@ -78,27 +85,51 @@ export const StateProvider: FC = ({ children }) => {
         [
           {
             id: 1,
-            name: "First option",
-            website: "https://www.stillOnATest",
-            price: 2,
+            name: "Emmets",
+            website: "https://www.emmettscafe.com",
+            price: 3,
           },
           {
             id: 2,
-            name: "Second option",
-            website: "https://www.stillOnATest",
+            name: "Loops",
+            website: "https://www.loopsgoodfood.com",
             price: 2,
           },
           {
             id: 3,
-            name: "Third option",
-            website: "https://www.stillOnATest",
-            price: 4,
+            name: "Yats",
+            website: "https://yatscajuncreole.com/wp/",
+            price: 2,
           },
           {
             id: 4,
-            name: "Fourth option",
-            website: "https://www.stillOnATest",
-            price: 4,
+            name: "Krema Nut Company",
+            website: "https://www.kremapickup.com",
+            price: 1,
+          },
+          {
+            id: 5,
+            name: "Tiger + Lily",
+            website: "https://www.tigerandlilybistro.com",
+            price: 3,
+          },
+          {
+            id: 6,
+            name: "Brassica",
+            website: "https://brassicas.com",
+            price: 3,
+          },
+          {
+            id: 7,
+            name: "Chipotle",
+            website: "https://www.chipotle.com",
+            price: 1,
+          },
+          {
+            id: 8,
+            name: "Nongs",
+            website: "https://www.nongshunanexpress.com/menu",
+            price: 2,
           },
         ],
         () => startOfDayEST
@@ -163,11 +194,12 @@ export const StateProvider: FC = ({ children }) => {
         restaurantsWithStatus,
         (rs) => rs.chosen || rs.chosen === null
       );
+
       const votesForCurrentOption =
-        _.filter(
-          todaysVotes,
-          (vote) => vote.optionId === currentOption?.restaurant.id
-        ) || [];
+        _.chain(todaysVotes)
+          .filter((vote) => vote.optionId === currentOption?.restaurant.id)
+          .sortBy("username")
+          .value() || [];
 
       const calcState: State = {
         currentOption: currentOption,
@@ -188,10 +220,26 @@ export const StateProvider: FC = ({ children }) => {
                 .date + gracePeriod
             : null,
         setUsername: setUsername,
+        wrongVersion: config.version !== firebaseState.version,
+        isDefault: false,
       };
       return calcState;
     }
   }, [firebaseState, username]);
+
+  React.useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (state.gracePeriodEnd && state.gracePeriodEnd > new Date().getTime()) {
+      timeout = setTimeout(() => {
+        setCounter((c) => c + 1);
+      }, state.gracePeriodEnd - new Date().getTime() + 100);
+    }
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  });
 
   React.useEffect(() => {
     const detach = API.getState((firebaseState) => {
@@ -200,7 +248,7 @@ export const StateProvider: FC = ({ children }) => {
     return () => {
       detach();
     };
-  }, []);
+  }, [counter]);
 
   return (
     <StateContext.Provider value={state}>{children}</StateContext.Provider>

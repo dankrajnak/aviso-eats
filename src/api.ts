@@ -10,6 +10,7 @@ export type FirebaseState = {
   options: Restaurant[];
   votes: Vote[];
   quorumSize: number;
+  version: string;
 };
 
 type SerializedDate = number;
@@ -93,6 +94,7 @@ class APIService {
         options: Object.values(val?.options ?? {}),
         votes: Object.values(val?.votes ?? {}),
         quorumSize: val?.quorumSize || 2,
+        version: val?.version,
       };
       handler(firebaseState);
     });
