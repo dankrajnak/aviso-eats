@@ -18,6 +18,7 @@
 		"dist/bundle.js"
 	],
 	"dependencies": {
+		"axios": "^0.23.0",
 		"commander": "^8.2.0",
 		"fast-shuffle": "^4.5.1",
 		"firebase": "^9.1.1",

@@ -3,6 +3,7 @@ import { onValue, ref, remove } from "firebase/database";
 import FirebaseManager from "./FirebaseManager";
 import { Restaurant, User, Vote } from "./state";
 import * as ip from "ip";
+import axios from "axios";
 
 export type FirebaseState = {
   users: User[];
@@ -50,6 +51,14 @@ class APIService {
     return `votes/${username}-${optionId}`;
   }
 
+  async checkIntoSlack(username: string): Promise<void> {
+    await axios.post(
+      "https://hooks.slack.com/workflows/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",
+
+      { username }
+    );
+  }
+
   async checkIn(username: string): Promise<void> {
     const me = {
       username,
@@ -60,6 +69,12 @@ class APIService {
       set(ref(this.database, this.getUserReference(username)), me),
       set(ref(this.database, this.getCheckedInReference(username)), me),
     ]);
+    try {
+      await this.checkIntoSlack(username);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   }
 
   vote(username: string, optionId: number, yes: boolean) {

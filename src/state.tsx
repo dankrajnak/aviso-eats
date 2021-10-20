@@ -81,59 +81,98 @@ export const StateProvider: FC = ({ children }) => {
       // map firebase state to State
       const startOfDayEST = getStartOfDayEST();
       // shuffled options
-      const options: Restaurant[] = shuffle(startOfDayEST)(
-        [
-          {
-            id: 1,
-            name: "Emmets",
-            website: "https://www.emmettscafe.com",
-            price: 3,
-          },
-          {
-            id: 2,
-            name: "Loops",
-            website: "https://www.loopsgoodfood.com",
-            price: 2,
-          },
-          {
-            id: 3,
-            name: "Yats",
-            website: "https://yatscajuncreole.com/wp/",
-            price: 2,
-          },
-          {
-            id: 4,
-            name: "Krema Nut Company",
-            website: "https://www.kremapickup.com",
-            price: 1,
-          },
-          {
-            id: 5,
-            name: "Tiger + Lily",
-            website: "https://www.tigerandlilybistro.com",
-            price: 3,
-          },
-          {
-            id: 6,
-            name: "Brassica",
-            website: "https://brassicas.com",
-            price: 3,
-          },
-          {
-            id: 7,
-            name: "Chipotle",
-            website: "https://www.chipotle.com",
-            price: 1,
-          },
-          {
-            id: 8,
-            name: "Nongs",
-            website: "https://www.nongshunanexpress.com/menu",
-            price: 2,
-          },
-        ],
-        () => startOfDayEST
-      );
+      const options: Restaurant[] = shuffle(startOfDayEST)([
+        {
+          id: 1,
+          name: "Emmets",
+          website: "https://www.emmettscafe.com",
+          price: 3,
+        },
+        {
+          id: 2,
+          name: "Loops",
+          website: "https://www.loopsgoodfood.com",
+          price: 2,
+        },
+        {
+          id: 3,
+          name: "Yats",
+          website: "https://yatscajuncreole.com/wp/",
+          price: 2,
+        },
+        {
+          id: 4,
+          name: "Krema Nut Company",
+          website: "https://www.kremapickup.com",
+          price: 1,
+        },
+        {
+          id: 5,
+          name: "Tiger + Lily",
+          website: "https://www.tigerandlilybistro.com",
+          price: 3,
+        },
+        {
+          id: 6,
+          name: "Brassica",
+          website: "https://brassicas.com",
+          price: 3,
+        },
+        {
+          id: 7,
+          name: "Chipotle",
+          website: "https://www.chipotle.com",
+          price: 1,
+        },
+        {
+          id: 8,
+          name: "Nongs",
+          website: "https://www.nongshunanexpress.com/menu",
+          price: 2,
+        },
+        {
+          id: 9,
+          name: "Brenz Pizza",
+          website: "https://brenzpizzaco.com/columbus-oh",
+          price: 2,
+        },
+        {
+          id: 10,
+          name: "Dewey's Pizza",
+          website: "https://deweyspizza.com",
+          price: 2,
+        },
+        {
+          id: 11,
+          name: "Smokehouse Brewing",
+          website: "http://www.smokehousebrewing.com/",
+          price: 3,
+        },
+        {
+          id: 12,
+          name: "Si Senior",
+          website: "https://www.sisenorcolumbus.com/",
+          price: 2,
+        },
+        {
+          id: 13,
+          name: "High Bank Distillery",
+          website: "https://www.highbankco.com/",
+          price: 2,
+        },
+        {
+          id: 13,
+          name: "DK Diner",
+          website: "http://www.thedkdiner.com/",
+          price: 2,
+        },
+        {
+          id: 14,
+          name: "Chocolate Cafe",
+          website: "https://www.chocolatecafecolumbus.com/",
+          price: 3,
+        },
+      ]);
 
       const todaysVotes =
         _.filter(firebaseState.votes, (vote) => vote.date > startOfDayEST) ||
